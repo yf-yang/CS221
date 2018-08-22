@@ -1,0 +1,92 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx,amsthm}
+
+\begin{document}
+
+\begin{center}
+{\Large CS221 Fall 2017 Homework [Foundations]}
+
+\begin{tabular}{rl}
+Name: & yf-yang
+\end{tabular}
+\end{center}
+
+By turning in this assignment, I agree by the Stanford honor code and declare
+that all of this is my own work.
+
+\section*{Problem 1}
+
+\begin{enumerate}[label=(\alph*)]
+  \item 
+    Let $\theta^{\ast} = \underset{\theta}{arg\,min} f(\theta)$, then
+    \begin{equation}\frac{\partial f(\theta^{\ast})}{\partial \theta^{\ast}} = \sum_{i=1}^{n}{w_i(\theta^{\ast} - x_i)} = 0\end{equation}
+    \begin{equation}\theta^{\ast}\sum_{i=1}^{n}{w_i} = \sum_{i=1}^{n}{w_i x_i}\end{equation}
+    \begin{equation}\theta^{\ast} = \frac{\sum_{i=1}^{n}{w_i x_i}}{\sum_{i=1}^{n}{w_i}}\end{equation}
+    Without loss of generality, we can assume $\sum_{i=1}^{n}{w_i}=1$, then
+    \begin{equation}\theta^{\ast} = \mathop{\mathbb{E}_{\mathbf{w}}}[\mathbf{x}]\end{equation}
+    In order to prove $\theta^{\ast}$ is a global minimum, we need to show
+    \begin{equation}\frac{\partial^2 f(\theta^{\ast})}{\partial {\theta^{\ast}}^2} = \sum_{i=1}^{n}{w_i}\end{equation}
+    Note that Eqn(5) is strictly positive if all $w_i$ are positive, so $\theta^{\ast}$ should be a global minimum, while when some $w_i$ is negative, $sum_{i=1}^{n}{w_i}$ may be negative, then the global minimum doesn't hold. \qed
+    
+  \item 
+    \begin{equation} f(\mathbf{x})=\sum_{i=1}^{d}{\max_{s\in \{-1,1\}}{s x_i}} = \sum_{i=1}^{d}{{\lvert}x_i{\rvert}} \end{equation}
+    \begin{equation} g(\mathbf{x})=\max_{s\in \{-1,1\}}{\sum_{i=1}^{d}{s x_i}} = \max_{s\in \{-1,1\}}{s \sum_{i=1}^{d}{x_i}} = {\lvert}\sum_{i=1}^{d}{x_i}{\rvert} \end{equation}
+    According to Triangular Inequality, we can conclude that $f(\mathbf{x}) > g(\mathbf{x})$ \qed
+
+  \item
+    Let $\mathbf{X_i} =$ (number of points you roll the i-th time), $\mathbf{N} =$ (number of rolls), then
+    \begin{align*} \mathop{\mathbb{E}}[\sum_{i=1}^{\mathbf{N}}{\mathbf{X_i}}] &= \sum_{n=0}^{\infty}f_{\mathbf{N}}(n+1)\mathop{\mathbb{E}}[\mathbf{X}|n+1] \\
+    &= \sum_{n=0}^{\infty}\frac{1}{6}(\frac{5}{6})^n\frac{b-a}{5}n \\
+    &= \frac{b-a}{30}\sum_{n=0}^{\infty}n(\frac{5}{6})^n \\
+    &= b-a\end{align*}  \qed
+
+  \item
+    Let $M(p) = \log{L(p)}$, then
+    \begin{equation}M(p) = 4\log{p}+3\log{(1-p)}\end{equation}
+    At $M(p)$'s maximum, which is also $L(p)$'s maximum we have
+    \begin{equation}\frac{\partial{M(p)}}{\partial p}=\frac{4}{p}-\frac{3}{1-p}=0\end{equation}
+    \begin{equation}p = \frac{4}{7}\end{equation}
+    Intuitively, in order to get 4 Heads in 7 flips with max probability(on average $\frac{4}{7}$ Head in one flip), we should let the probability of Heads in one flip, which is the Expectation of Heads in one flip be exactly $\frac{4}{7}$(because $L(p)$ is a continuous function and Expectation of Heads in one flip should be where the probability is the maximum. \qed
+    
+  \item 
+    \begin{equation}\frac{\partial f}{\partial w_k} = \sum_{i=1}^{n}\sum_{j=1}^{n}2(a_{ik}-b_{jk})(\mathbf{a_i^\top w-b_j^\top w})+2\lambda w_k\end{equation}
+    \begin{equation}\frac{\partial f}{\partial \mathbf w} = 2(\sum_{i=1}^{n}\sum_{j=1}^{n}(\mathbf{a_i^\top w-b_j^\top w})(\mathbf{a_{i}-b_{j}})+\lambda\mathbf w)\end{equation} \qed
+\end{enumerate}
+
+\section*{Problem 2}
+
+\begin{enumerate}[label=(\alph*)]
+  \item 
+    Start from 1-dimensional case with only one line segment to be placed, then the number of cases is
+    \begin{equation}\sum_{i=1}^n n=\frac{n(n+1)}{2}\end{equation}
+    With 6 independent parts and two independent axis, the total number should be
+    \begin{equation}((\frac{n(n+1)}{2})^6)^2=\frac{n(n+1)}{2})^{12}\end{equation}
+    And
+    \begin{equation}\lim_{n\to\infty}\frac{n(n+1)}{2})^{12}=O(n^{24})\end{equation}\qed
+    
+  \item 
+    See prob2-2.py for the code.
+    The complexity is $O(n^2)$.\qed
+    
+  \item
+    \begin{equation} f(n) = 
+    \begin{cases} 
+      1, n = 0, 1 \\
+      \sum_{i=0}^{n-1}{f(i)}, n \ge 2
+   \end{cases}
+   \end{equation}
+   Then, we can prove $f(n)$ has a more direct form: 
+   \begin{equation}f(n) = 2^{n-1}, n \in \mathbb{N^+}\end{equation}
+   We can prove that by induction: \\
+   \textbf{Base Case}: Obviously, we have $f(1) = 2^0 = 1$ \\
+   \textbf{Inductive Step}: 
+   \begin{equation}f(n) = \sum_{i=1}^{n-1}2^{i-1}+f(0)=2^{n-1}-1+1=2^{n-1}\end{equation}\qed
+   
+ \item 
+    \begin{align}\sum_{i=1}^{n}\sum_{j=1}^{n}{(\mathbf{a_i^\top w-b_j^\top w})}^2 + \lambda \left\lVert\mathbf{w}\right\rVert_2^2 &= \sum_{i=1}^{n}\sum_{j=1}^{n}{(\mathbf{w^\top a_i a_i^\top w-w^\top a_i b_j^\top w + w^\top b_j b_j^\top w})} + \lambda \left\lVert\mathbf{w}\right\rVert_2^2\\
+    &= \mathbf{w^\top} (\sum_{i=1}^{n}\sum_{j=1}^{n}{(\mathbf{a_i a_i^\top-a_i b_j^\top+b_j b_j})}) \mathbf{w}+ \lambda \left\lVert\mathbf{w}\right\rVert_2^2\end{align}
+    See prob2-4.py for the code. \qed
+    
+\end{enumerate}
+
+\end{document}
