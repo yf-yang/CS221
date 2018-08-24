@@ -108,3 +108,5 @@ venv.bak/
 
 # cource materials
 materials/
+
+.DS_Store
