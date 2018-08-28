@@ -12,17 +12,18 @@ class SegmentationProblem(util.SearchProblem):
 
     def startState(self):
         # BEGIN_YOUR_CODE (our solution is 1 line of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
+        return 0
         # END_YOUR_CODE
 
     def isEnd(self, state):
         # BEGIN_YOUR_CODE (our solution is 2 lines of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
+        return state == len(self.query) 
         # END_YOUR_CODE
 
     def succAndCost(self, state):
         # BEGIN_YOUR_CODE (our solution is 7 lines of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
+        querys = [(i, self.query[state:i]) for i in range(state, len(self.query) + 1)]
+        return [(query, index, self.unigramCost(query)) for index, query in querys]
         # END_YOUR_CODE
 
 def segmentWords(query, unigramCost):
@@ -33,7 +34,7 @@ def segmentWords(query, unigramCost):
     ucs.solve(SegmentationProblem(query, unigramCost))
 
     # BEGIN_YOUR_CODE (our solution is 3 lines of code, but don't worry if you deviate from this)
-    raise Exception("Not implemented yet")
+    return ' '.join(ucs.actions)
     # END_YOUR_CODE
 
 ############################################################
@@ -47,22 +48,27 @@ class VowelInsertionProblem(util.SearchProblem):
 
     def startState(self):
         # BEGIN_YOUR_CODE (our solution is 1 line of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
+        return 0, wordsegUtil.SENTENCE_BEGIN
         # END_YOUR_CODE
 
     def isEnd(self, state):
         # BEGIN_YOUR_CODE (our solution is 2 lines of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
+        return state[0] == len(self.queryWords)
         # END_YOUR_CODE
 
     def succAndCost(self, state):
         # BEGIN_YOUR_CODE (our solution is 8 lines of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
+        index, word = state
+        fills = self.possibleFills(self.queryWords[index])
+        fills = {self.queryWords[index]} if not fills else fills
+        return [(fill, (index+1, fill), self.bigramCost(word, fill)) for fill in fills]
         # END_YOUR_CODE
 
 def insertVowels(queryWords, bigramCost, possibleFills):
     # BEGIN_YOUR_CODE (our solution is 3 lines of code, but don't worry if you deviate from this)
-    raise Exception("Not implemented yet")
+    ucs = util.UniformCostSearch(verbose=0)
+    ucs.solve(VowelInsertionProblem(queryWords, bigramCost, possibleFills))
+    return ' '.join(ucs.actions)
     # END_YOUR_CODE
 
 ############################################################
@@ -76,17 +82,26 @@ class JointSegmentationInsertionProblem(util.SearchProblem):
 
     def startState(self):
         # BEGIN_YOUR_CODE (our solution is 2 lines of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
+        return 0, wordsegUtil.SENTENCE_BEGIN
         # END_YOUR_CODE
 
     def isEnd(self, state):
         # BEGIN_YOUR_CODE (our solution is 2 lines of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
+        return state[0] == len(self.query)
         # END_YOUR_CODE
 
     def succAndCost(self, state):
         # BEGIN_YOUR_CODE (our solution is 15 lines of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
+        index, word = state
+        result = []
+
+        for i in range(index, len(self.query)+1):
+            query = self.query[index:i]
+            fills = self.possibleFills(query)
+            fills = {query} if not fills else fills
+            for fill in fills:
+                result.append((fill, (i, fill), self.bigramCost(word, fill)))
+        return result
         # END_YOUR_CODE
 
 def segmentAndInsert(query, bigramCost, possibleFills):
@@ -94,7 +109,9 @@ def segmentAndInsert(query, bigramCost, possibleFills):
         return ''
 
     # BEGIN_YOUR_CODE (our solution is 4 lines of code, but don't worry if you deviate from this)
-    raise Exception("Not implemented yet")
+    ucs = util.UniformCostSearch(verbose=0)
+    ucs.solve(JointSegmentationInsertionProblem(query, bigramCost, possibleFills))
+    return ' '.join(ucs.actions)
     # END_YOUR_CODE
 
 ############################################################
