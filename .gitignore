@@ -110,3 +110,5 @@ venv.bak/
 materials/
 
 .DS_Store
+
+tmp.sh
