@@ -1,0 +1,42 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx,amsthm,geometry,graphicx}
+
+\begin{document}
+
+\begin{center}
+{\Large CS221 Fall 2017 Homework [Foundations]}
+
+\begin{tabular}{rl}
+Name: & yf-yang
+\end{tabular}
+\end{center}
+
+By turning in this assignment, I agree by the Stanford honor code and declare
+that all of this is my own work.
+
+\section*{Problem 3}
+
+\begin{enumerate}[label=(\alph*)]
+    \item \ 
+    \begin{itemize}
+        \item \textbf{states:} A tuple of (index of previous word, possible previous word).
+        \item \textbf{initial state:} (0, "-BEGIN-").
+        \item \textbf{actions:} Every possible words generated from every string starts from current state index.
+        \item \textbf{cost:} Cost of previous word and current action word.
+        \item \textbf{end test:} Whether previous state index equals to length of the whole string.
+    \end{itemize}
+    
+    \setcounter{enumi}{2}
+    \item
+        Keep the settings as (a) and modifies cost only, then cost is a function of only current action word. \\
+        \begin{equation}
+            Cost(w) = u_b(w) = \min_{w'}{b(w',w)}
+        \end{equation}
+        Then we can prove
+        \begin{itemize}
+            \item Consistency(1): $0 \le u_b(w) \le b(w', w)$ for all $w'$.
+            \item Consistency(2): When the state hit the end, there is no future action, which means the cost is 0.
+        \end{itemize}
+\end{enumerate}
+
+\end{document}
